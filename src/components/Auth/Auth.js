@@ -14,6 +14,7 @@ const Auth = props => {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [rememberMe, setRememberMe] = useState(false)
 
     const [showErrorEmail, setShowErrorEmail] = useState(false)
     const [showErrorPassword, setShowErrorPassword] = useState(false)
@@ -31,6 +32,15 @@ const Auth = props => {
                     email: data.email,
                     token: data.token
                 }))
+                if (rememberMe) {
+                    try {
+                        localStorage.setItem("token", data.token)
+                    }
+                    catch(err){
+                        alert("Не вышло запомнить вас! А жаль:(")
+                    }
+                }
+                
                 history.push('/profile')
                
                 // console.log("token", data.token)
@@ -56,9 +66,13 @@ const Auth = props => {
         setPassword(e.target.value)
     }
 
+    function handleChangeRemember(e) {
+        setRememberMe(e.target.value)
+    }
+
     function validateEmail(enableEmptyValue=true) {
         let isValid = true
-        const regEx = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        const regEx = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
         if ((!enableEmptyValue && !email) || !regEx.test(email)) {
             isValid = false
         } else {
@@ -92,6 +106,9 @@ const Auth = props => {
                     <Form.Label>Пароль</Form.Label>
                     <Form.Control type="password" placeholder="Пароль" value={password} onChange={handleChangePassword} />
                     {showErrorPassword && <Form.Text className="text-muted">Пароль должен состоять из 3 и более символов</Form.Text>}
+                </Form.Group>
+                <Form.Group controlId="rememberMe">
+                    <Form.Check type="checkbox" label="Запомнить меня" value={rememberMe} onChange={handleChangeRemember} />
                 </Form.Group>
                 <Button variant="primary" type="submit" className={s.loginButton} onClick={handleSubmit}>
                     Войти
