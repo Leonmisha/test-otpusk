@@ -1,0 +1,21 @@
+.Auth {
+    display: flex;
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.form {
+    display: flex;
+    width: 300px;
+    margin: 0 auto;
+    padding: 20px 15px;
+    flex-direction: column;
+    border: 1px solid #17a2b8;
+    border-radius: 10px;
+}
+
+.loginButton {
+    align-self: center;
+    width: 150px;
+}
