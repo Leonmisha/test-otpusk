@@ -1,9 +1,9 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import React, { useEffect } from 'react'
-import {Switch, Route} from "react-router-dom"
-import { useDispatch } from 'react-redux'
+import React, { useEffect, useState } from 'react'
+import {Switch, Route, Redirect} from "react-router-dom"
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from "react-router-dom";
 
 import Auth from './components/Auth/Auth'
@@ -14,10 +14,13 @@ import { saveLoginInfo } from './redux/actions';
 const App = () => {
 
   const dispatch = useDispatch()
+  const isAuth = useSelector( state => {
+    return Boolean(state.email && state.token)
+  })
   let history = useHistory()
+  const [tokenChecked, setTokenChecked] = useState(false)
 
   useEffect( () => {
-      console.log("hello")
       let checkToken = async () => {
         const token = localStorage.getItem("token")
         if (token) {
@@ -34,30 +37,70 @@ const App = () => {
                 email: user.email,
                 token
             }))
-            history.push("/profile")
+            history.push(getAuthRedirectURL(2))
           } else {
             localStorage.removeItem("token")
             alert("Ошибка авторизации")
-            history.push('/login')
+            history.push(getNotAuthRedirectURL())
           }
         } else {
-            history.push("/login")
+            history.push(getNotAuthRedirectURL())
         }
+        setTokenChecked(true)
       }
 
       checkToken()
+      //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, history])
+
+  function getNotAuthRedirectURL() {
+    if (history.location.pathname === '/login') {
+      return history.location
+    }
+    let pathname = '/login'
+    if (history.location.pathname) {
+      return {
+        pathname,
+        search: `?redirect=${history.location.pathname}`
+      }
+    } else {
+      return pathname
+    }
+  }
+
+  function getAuthRedirectURL(arg) {
+    if (history.location.pathname !== '/login') {
+      return history.location
+    }
+    let pathname = '/profile'
+    let searchParams = new URLSearchParams(history.location.search)
+    let redirectURL = searchParams.get("redirect")
+    if (redirectURL != null && redirectURL !== '/login') {
+      pathname = redirectURL
+    }
+    return pathname
+  }
+
   return (
 
     <div className="App">
-      <Switch>
-        <Route path="/login">
-          <Auth />
-        </Route>
-        <Route>
-          <Main path="/profile"/>
-        </Route>
-      </Switch>
+      {tokenChecked &&
+        (!isAuth ?
+          <Switch>
+            <Route path="/login">
+              <Auth/>
+            </Route>
+            <Redirect to={getNotAuthRedirectURL()}/>
+          </Switch>
+          :
+          <Switch>
+            <Route path="/profile">
+              <Main/>
+            </Route>
+            <Redirect from="/login" to={getAuthRedirectURL(1)}/>
+          </Switch>
+        )
+      }
     </div>
   );
 }

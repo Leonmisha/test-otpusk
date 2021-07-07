@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useHistory } from "react-router-dom";
 import s from './Auth.module.css'
 
 import { Form, Button } from 'react-bootstrap';
@@ -10,7 +9,6 @@ import { saveLoginInfo } from '../../redux/actions';
 const Auth = props => {
 
     const dispatch = useDispatch()
-    let history = useHistory()
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -28,10 +26,6 @@ const Auth = props => {
         authenticateUser(email, password)
             .then(response => response.json())
             .then(data => {
-                dispatch(saveLoginInfo({
-                    email: data.email,
-                    token: data.token
-                }))
                 if (rememberMe) {
                     try {
                         localStorage.setItem("token", data.token)
@@ -40,11 +34,10 @@ const Auth = props => {
                         alert("Не вышло запомнить вас! А жаль:(")
                     }
                 }
-                
-                history.push('/profile')
-               
-                // console.log("token", data.token)
-                // console.log("email", data.email)
+                dispatch(saveLoginInfo({
+                    email: data.email,
+                    token: data.token
+                }))
         }).catch(response => response.json()
             .then(data => {
                 setApiError(data.message)
