@@ -1,0 +1,16 @@
+.Main {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+.cardsContainer {
+    overflow-y: auto;
+}
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 10px 20px;
+}
+.search {
+    margin: 10px 20px 30px;
+}
