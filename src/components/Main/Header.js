@@ -1,5 +1,6 @@
 
 import React from 'react'
+import PropTypes from "prop-types";
 import s from './Header.module.css'
 import { useDispatch } from 'react-redux';
 import { userLogout } from '../../redux/actions';
@@ -17,5 +18,9 @@ const Header = ({ email }) => {
         <Button className={s.logout} onClick={logout} variant="light">Выход</Button>
     </header>
 )}
+
+Header.propTypes = {
+    email: PropTypes.string
+}
 
 export default Header
