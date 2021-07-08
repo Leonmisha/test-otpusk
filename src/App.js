@@ -44,7 +44,9 @@ const App = () => {
             }))
             history.push(getAuthRedirectURL(2))
           } else {
-            localStorage.removeItem("token")
+            try {
+              localStorage.removeItem("token")
+            } catch {}
             alert("Ошибка авторизации")
             history.push(getNotAuthRedirectURL())
           }
@@ -55,6 +57,7 @@ const App = () => {
       }
 
       checkToken()
+      // Убираем предупреждение про недостающую зависимость getNotAuthRedirectURL. Нам нужно чтобы useEffect сработал один раз
       //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, history])
 
@@ -63,6 +66,7 @@ const App = () => {
       return history.location
     }
     let pathname = '/login'
+    // Добавляем query параметр redirect, чтобы после логинизации пользователя перекинуло на страницу, которую он хотел зайти
     if (history.location.pathname && history.location.pathname !== '/') {
       return {
         pathname,

@@ -5,6 +5,7 @@ import s from './Auth.module.css'
 import { Form, Button } from 'react-bootstrap';
 import { authenticateUser } from './../../utils/sdk';
 import { saveLoginInfo } from '../../redux/actions';
+import { getJSONResponse } from './../../utils/fetch';
 
 const Auth = props => {
 
@@ -23,8 +24,7 @@ const Auth = props => {
         if (!(validateEmail(false) & validatePassword(false))) {
             return false
         }
-        authenticateUser(email, password)
-            .then(response => response.json())
+        getJSONResponse(authenticateUser, email, password)
             .then(data => {
                 if (rememberMe) {
                     try {
@@ -38,11 +38,9 @@ const Auth = props => {
                     email: data.email,
                     token: data.token
                 }))
-        }).catch(response => response.json()
-            .then(data => {
+            }).catch(data => {
                 setApiError(data.message)
             })
-        )
     }
 
     function handleChangeEmail(e) {
@@ -106,7 +104,7 @@ const Auth = props => {
                 <Button variant="primary" type="submit" className={s.loginButton} onClick={handleSubmit}>
                     Войти
                 </Button>
-                {apiError && <Form.Text>{apiError}</Form.Text>}
+                {apiError && <Form.Text className="text-muted">{apiError}</Form.Text>}
             </Form>
         </div>
     )

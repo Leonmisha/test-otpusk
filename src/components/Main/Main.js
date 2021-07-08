@@ -2,14 +2,18 @@
 import React, { useEffect, useState } from 'react'
 import s from './Main.module.css'
 import { useSelector } from 'react-redux'
+
 import Header from './Header';
-import { getFlights } from '../../utils/sdk';
 import Card from './Card';
 import { Form } from 'react-bootstrap';
+
+import { getFlights } from '../../utils/sdk';
+import { getJSONResponse } from './../../utils/fetch';
 
 const Main = () => {
   const token = useSelector( state => state.token)
   const email = useSelector( state => state.email)
+  
   const [flights, setFlights] = useState([])
   const [isLoaded, setIsLoaded] = useState(false)
   const [search, setSearch] = useState('')
@@ -24,7 +28,7 @@ const Main = () => {
   })
 
   useEffect( () => {
-    getFlights(token).then(response => response.json())
+    getJSONResponse(getFlights, token)
       .then(data => {
         let flights = []
         for (let id in data.data) {
@@ -36,6 +40,7 @@ const Main = () => {
         setFlights(flights)
         setIsLoaded(true)
       })
+      .catch( err => {})
   }, [token])
 
   function handleChangeSearch(e) {
