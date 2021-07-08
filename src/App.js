@@ -22,7 +22,12 @@ const App = () => {
 
   useEffect( () => {
       let checkToken = async () => {
-        const token = localStorage.getItem("token")
+        let token = ''
+        try {
+          token = localStorage.getItem("token")
+        } catch {
+          token = ''
+        }
         if (token) {
           let isValid
           try {
