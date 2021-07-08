@@ -1,4 +1,4 @@
-import { createStore } from 'redux'
+import { createStore  } from 'redux'
 import * as actions from './actions.js'
 
 let initialState = {
@@ -6,9 +6,8 @@ let initialState = {
 	token: ""
 }
 
-const store = createStore(reducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
 
-function reducer(state = initialState, action) {
+function appReducer( state = initialState, action) {
 	switch (action.type) {
 		case actions.SAVE_LOGIN_INFO:
 			return {
@@ -21,5 +20,15 @@ function reducer(state = initialState, action) {
 			return state
 	}
 }
+
+const rootReducer = (state, action) => {
+	if (actions.USER_LOGOUT) {
+		localStorage.removeItem('token')
+		state = undefined
+	}
+	return appReducer(state, action)
+  }
+  
+const store = createStore(rootReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
 
 export default store

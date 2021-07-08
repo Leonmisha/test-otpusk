@@ -15,12 +15,11 @@ const Main = () => {
   const [search, setSearch] = useState('')
 
   let filteredFlights = flights.filter( flight => {
-    debugger
     if (!search) {
       return flight
     }
-    let cond1 = flight.company.name.indexOf(search) != -1
-    let cond2 = flight.company.alternativeNames.some( n => n.indexOf(search) != -1)
+    let cond1 = flight.company.name.indexOf(search) !== -1
+    let cond2 = flight.company.alternativeNames.some( n => n.indexOf(search) !== -1)
     return (cond1 || cond2)
   })
 
