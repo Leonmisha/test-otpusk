@@ -58,7 +58,9 @@ const App = () => {
       return history.location
     }
     let pathname = '/login'
-    if (history.location.pathname) {
+    console.log(process.env.PUBLIC_URL)
+    console.log(history.location.pathname)
+    if (history.location.pathname && history.location.pathname !== '/' + process.env.PUBLIC_URL) {
       return {
         pathname,
         search: `?redirect=${history.location.pathname}`
