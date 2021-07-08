@@ -60,7 +60,7 @@ const Auth = props => {
     }
 
     function handleChangeRemember(e) {
-        setRememberMe(e.target.value)
+        setRememberMe(e.target.checked)
     }
 
     function validateEmail(enableEmptyValue=true) {
