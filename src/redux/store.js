@@ -22,7 +22,7 @@ function appReducer( state = initialState, action) {
 }
 
 const rootReducer = (state, action) => {
-	if (actions.USER_LOGOUT) {
+	if (action.type === actions.USER_LOGOUT) {
 		localStorage.removeItem('token')
 		state = undefined
 	}
